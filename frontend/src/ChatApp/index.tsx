@@ -4,6 +4,7 @@ import ChatInputBox from "./ChatInputBox/ChatInputBox";
 import { useGetMessages } from "../hooks/useGetMessages";
 import { Message } from "../data";
 import { ArrowPathIcon } from "@heroicons/react/24/outline";
+import ChatHeader from "./ChatHeader/ChatHeader";
 
 const Chat = () => {
   /** Simulate a hook fetching the data */
@@ -41,6 +42,7 @@ const Chat = () => {
 
 <div className="h-screen flex items-center justify-center">
   <div className="max-w-sm w-full bg-white border border-gray-200 rounded-lg shadow relative">
+    <ChatHeader name={"devlazar"} numberOfMessages={chatMessages.length} />
     <ChatContent messages={chatMessages} />
     <ChatInputBox sendANewMessage={sendANewMessage} />
   </div>
