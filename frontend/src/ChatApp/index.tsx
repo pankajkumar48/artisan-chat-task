@@ -32,22 +32,13 @@ const Chat = () => {
   };
 
   return (
-    // <div className="max-w-sm mx-auto my-auto">
-    //   <div className="bg-white border border-gray-200 rounded-lg shadow relative">
-    //     <ChatContent messages={chatMessages} />
-    //     <ChatInputBox sendANewMessage={sendANewMessage} />
-    //   </div>
-    // </div>
-
-
-<div className="h-screen flex items-center justify-center">
-  <div className="max-w-sm w-full bg-white border border-gray-200 rounded-lg shadow relative">
-    <ChatHeader name={"devlazar"} numberOfMessages={chatMessages.length} />
-    <ChatContent messages={chatMessages} />
-    <ChatInputBox sendANewMessage={sendANewMessage} />
-  </div>
-</div>
-
+    <div className="h-screen flex items-center justify-center">
+      <div className="max-w-sm w-full bg-white border border-gray-200 rounded-lg shadow relative">
+        <ChatHeader name={"me"} />
+        <ChatContent messages={chatMessages} />
+        <ChatInputBox sendANewMessage={sendANewMessage} />
+      </div>
+    </div>
   );
 };
 

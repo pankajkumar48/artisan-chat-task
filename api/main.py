@@ -9,12 +9,13 @@ chat_history = []
 
 
 class Chat:
-    def __init__(self, chat_id: int, message: str = None, user: str = None):
+    def __init__(self, chat_id: int, message: str = None, user: str = None, is_chat_owner: bool = False):
         self.chat_id = chat_id
         self.message = message
         self.user = user
         self.timestamp = Chat.get_current_time()
         self.deleted = False
+        self.is_chat_owner = is_chat_owner
 
     @staticmethod
     def get_current_time():
@@ -28,7 +29,8 @@ class Chat:
             "message": self.message,
             "user": self.user,
             "timestamp": self.timestamp,
-            "deleted": self.deleted
+            "deleted": self.deleted,
+            "is_chat_owner": self.is_chat_owner
         }
 
 
@@ -45,11 +47,25 @@ def get_chats():
 
 # API for posting a new chat
 def get_bot_response():
-    return "some bot response"
+    sample_response_strings = (
+        "I am a bot",
+        "I am a bot, what can I do for you?",
+        "I am a bot, how can I help you?",
+        "I am a bot, how can I assist you?",
+        "I am a bot, how can I support you?",
+        "I am a bot, how can I be of service?",
+        "I am a bot, how can I be of assistance?",
+        "I am a bot, how can I be of help?",
+        "I am a bot, how can I be of aid?",
+        "I am a bot, how can I be of use?",
+    )
+
+    return sample_response_strings[len(chat_history) % len(sample_response_strings)]
 
 
 def add_new_chat(chat_message: str, sender: str):
-    new_chat = Chat(len(chat_history)+1,  chat_message, sender)
+    is_chat_owner = sender == "me"
+    new_chat = Chat(len(chat_history)+1,  chat_message, sender, is_chat_owner)
     chat_history.append(new_chat)
     return True
 

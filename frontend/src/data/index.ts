@@ -1,33 +1,27 @@
 interface Message {
-  text: string;
-  sentBy: string;
-  sentAt: Date;
+  chatId?: number;
+  message: string;
+  user: string;
+  timestamp: Date;
+  deleted?: boolean;
   isChatOwner?: boolean;
 }
 
 const messages: Message[] = [
   {
-    text: "Hey!",
-    sentBy: "devlazar",
-    sentAt: new Date("2023-03-02T09:00:00Z"),
+    chatId: 1,
+    message: "Hello, how are you?",
+    user: "me",
+    timestamp: new Date(),
+    deleted: false,
     isChatOwner: true
   },
   {
-    text: "Hey, devlazar!",
-    sentBy: "anon",
-    sentAt: new Date("2023-03-02T09:01:00Z"),
-    isChatOwner: false
-  },
-  {
-    text: "Do you like this chat?",
-    sentBy: "devlazar",
-    sentAt: new Date("2023-03-02T09:02:00Z"),
-    isChatOwner: true
-  },
-  {
-    text: "Looks nice!",
-    sentBy: "anon",
-    sentAt: new Date("2023-03-02T09:03:00Z"),
+    chatId: 2,
+    message: "I am fine, thank you.",
+    user: "bot",
+    timestamp: new Date(),
+    deleted: false,
     isChatOwner: false
   }
 ];

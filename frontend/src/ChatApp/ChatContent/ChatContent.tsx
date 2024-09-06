@@ -1,7 +1,7 @@
 import React from "react";
-import { Message } from "../../data";
 import {} from "../../hooks/messages-transform.types";
 import Avatar from "../Avatar/Avatar";
+import { Message } from "../../hooks/useGetMessages";
 
 interface ChatContentProps {
   messages: Message[];
@@ -25,14 +25,7 @@ const ChatContent = ({ messages }: ChatContentProps) => {
               message.isChatOwner ? "order-1 mr-2" : "order-2 ml-2"
             }`}
           >
-            <span className="text-xs text-gray-200">
-              {message.sentBy}&nbsp;-&nbsp;
-              {new Date(message.sentAt).toLocaleTimeString("en-US", {
-                hour: "2-digit",
-                minute: "2-digit"
-              })}
-            </span>
-            <span className="text-md">{message.text}</span>
+            <span className="text-md">{message.message}</span>
           </div>
         </div>
       ))}
