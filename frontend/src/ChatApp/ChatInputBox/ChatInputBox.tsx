@@ -1,6 +1,6 @@
 import React from "react";
-import { Message } from "../../data";
 import DebouncedInput from "../../components/DebouncedInput";
+import { Message } from "../../hooks/useGetMessages";
 interface ChatInputBoxProps {
   sendANewMessage: (message: Message) => void;
 }
@@ -15,9 +15,8 @@ const ChatInputBox = ({ sendANewMessage }: ChatInputBoxProps) => {
   const doSendMessage = () => {
     if (newMessage && newMessage.length > 0) {
       const newMessagePayload: Message = {
-        sentAt: new Date(),
-        sentBy: "devlazar",
-        isChatOwner: true,
+        user: "me",
+        is_chat_owner: true,
         message: newMessage
       };
       sendANewMessage(newMessagePayload);

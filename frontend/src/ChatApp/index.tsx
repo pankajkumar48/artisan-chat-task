@@ -18,8 +18,6 @@ const Chat = () => {
         const response = await fetch(API_URL);
         const data = await response.json();
         const fetchedChats = data.chats;
-        console.log('Data fetched:', fetchedChats);
-        console.log('Type of data:', typeof fetchedChats);
         setChatMessages(fetchedChats);
       } catch (error) {
         console.error('Error fetching messages:', error);
@@ -30,6 +28,7 @@ const Chat = () => {
   }, []);
 
   const sendANewMessage = (message: Message) => {
+    console.log("This message to send", message)
     setChatMessages((prevMessages) => [...prevMessages, message]);
 
     // Send this message to the server via a post api

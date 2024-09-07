@@ -24,7 +24,7 @@ export interface Message{
   chat_id?: number;
   message: string;
   user: string;
-  timestamp: Date;
+  timestamp?: Date;
   deleted?: boolean;
   is_chat_owner?: boolean;
 }
