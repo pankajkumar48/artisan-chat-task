@@ -10,6 +10,7 @@ interface ChatContentProps {
 const ChatContent = ({ messages }: ChatContentProps) => {
   return (
     <div className="max-h-fit px-6 py-1 overflow-auto">
+      {console.log(messages)}
       {messages.map((message: Message, index: number) => (
         <div
           key={index}

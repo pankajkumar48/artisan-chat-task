@@ -18,7 +18,7 @@ const ChatInputBox = ({ sendANewMessage }: ChatInputBoxProps) => {
         sentAt: new Date(),
         sentBy: "devlazar",
         isChatOwner: true,
-        text: newMessage
+        message: newMessage
       };
       sendANewMessage(newMessagePayload);
       setNewMessage("");
