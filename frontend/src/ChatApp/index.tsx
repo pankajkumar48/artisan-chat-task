@@ -1,35 +1,50 @@
-import React from "react";
+import { useState, useEffect } from "react";
 import ChatContent from "./ChatContent/ChatContent";
 import ChatInputBox from "./ChatInputBox/ChatInputBox";
-import { useGetMessages } from "../hooks/useGetMessages";
+import { useFetchMessages, useGetMessages } from "../hooks/useGetMessages";
 import { Message } from "../data";
 import { ArrowPathIcon } from "@heroicons/react/24/outline";
 import ChatHeader from "./ChatHeader/ChatHeader";
 
 const Chat = () => {
-  /** Simulate a hook fetching the data */
-  const {
-    messages: { data }
-  } = useGetMessages();
-
   /** State to control new messages */
-  const [chatMessages, setChatMessages] = React.useState<Message[]>(data);
+  const [chatMessages, setChatMessages] = useState<Message[]>([]);
 
-  /**
-   *
-   * @param message
-   * "Create" a new message
-   */
+  // Add a hook on load to fetch messages and set the state
+  useEffect(() => {
+    const fetchMessages = async () => {
+      try {
+        const API_URL = 'http://localhost:8000/chat';
+        const response = await fetch(API_URL);
+        const data = await response.json();
+        const fetchedChats = data.chats;
+        console.log('Data fetched:', fetchedChats);
+        console.log('Type of data:', typeof fetchedChats);
+        setChatMessages(fetchedChats);
+      } catch (error) {
+        console.error('Error fetching messages:', error);
+      }
+    };
+
+    fetchMessages();
+  }, []);
+
   const sendANewMessage = (message: Message) => {
     setChatMessages((prevMessages) => [...prevMessages, message]);
-  };
 
-  /**
-   * Reset chat to the default messages
-   */
-  const resetChat = () => {
-    setChatMessages(data);
-  };
+    // Send this message to the server via a post api
+    const API_URL = `http://localhost:8000/chat/?chat_message=${encodeURIComponent(message.message)}`;
+    fetch(API_URL, {
+      method: 'POST',
+      headers: {
+        'accept': 'application/json',
+      },
+      body: '', // No body content as per the curl command
+    })
+      .then((response) => response.json())
+      .then((data) => console.log('Success:', data))
+      .catch((error) => console.error('Error:', error));
+  }
 
   return (
     <div className="h-screen flex items-center justify-center">

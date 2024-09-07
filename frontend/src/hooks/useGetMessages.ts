@@ -20,29 +20,31 @@ export const useGetMessages = (): MessagesModel => {
 //   isChatOwner?: boolean;
 // }
 
-// interface Messages {
-//   messages: Message[];
-// }
+export interface Message{
+  chat_id?: number;
+  message: string;
+  user: string;
+  timestamp: Date;
+  deleted?: boolean;
+  is_chat_owner?: boolean;
+}
 
-// const API_URL = 'localhost:8000/chat';
+interface Messages {
+  messages: Message[];
+}
 
-// export const useGetMessages = (): Messages => {
-//   const [messages, setMessages] = useState<Message[]>([]);
+const API_URL = 'http://localhost:8000/chat';
 
-//   useEffect(() => {
-//     const fetchMessages = async () => {
-//       try {
-//         const response = await fetch(API_URL);
-//         const data = await response.json();
-//         console.log('Data:', data);
-//         setMessages(data.messages);
-//       } catch (error) {
-//         console.error('Error fetching messages:', error);
-//       }
-//     };
-
-//     fetchMessages();
-//   }, []);
-
-//   return { messages.data };
-// };
+export const useFetchMessages = (): Messages => {
+  try {
+    // Ftech the messages from the API and return them use then chaining
+    const messages = fetch(API_URL)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('Data fetched:', data);
+        return data;
+      });
+  } catch (error) {
+    console.error('Error fetching messages:', error);
+  }
+};
