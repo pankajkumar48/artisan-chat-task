@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import ChatContent from "./ChatContent/ChatContent";
 import ChatInputBox from "./ChatInputBox/ChatInputBox";
-import { useFetchMessages, useGetMessages } from "../hooks/useGetMessages";
-import { Message } from "../data";
+import { Message, useFetchMessages, useGetMessages } from "../hooks/useGetMessages";
 import { ArrowPathIcon } from "@heroicons/react/24/outline";
 import ChatHeader from "./ChatHeader/ChatHeader";
 
@@ -41,7 +40,16 @@ const Chat = () => {
       body: '', // No body content as per the curl command
     })
       .then((response) => response.json())
-      .then((data) => console.log('Success:', data))
+      .then((data) => {
+        console.log('Success:', data);
+
+        const repliedMessage: Message = {
+          user: "bot",
+          is_chat_owner: false,
+          message: data.bot_response,
+        };
+        setChatMessages((prevMessages) => [...prevMessages, repliedMessage]);
+      })
       .catch((error) => console.error('Error:', error));
   }
 
