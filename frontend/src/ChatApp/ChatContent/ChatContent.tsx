@@ -7,10 +7,12 @@ import { useState } from 'react';
 
 interface ChatContentProps {
   messages: Message[];
-  updateMessage: (index: number, newMessage: string) => void;
+  setChatMessages: React.Dispatch<React.SetStateAction<Message[]>>;
 }
 
-const ChatContent: React.FC<ChatContentProps> = ({ messages, updateMessage }) => {
+const ChatContent: React.FC<ChatContentProps> = ({ messages, setChatMessages }) => {
+  console.log("edited1", typeof setChatMessages, setChatMessages)
+
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const [editedMessage, setEditedMessage] = useState<string>('');
 
@@ -21,9 +23,9 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, updateMessage }) =>
 
   const handleSaveClick = async (index: number) => {
     try {
-      const API_URL = `http://localhost:8000/chat/?chat_message=${encodeURIComponent(editedMessage)}`;
+      const API_URL = `http://localhost:8000/chat/${encodeURIComponent(index+1)}?chat_message=${encodeURIComponent(editedMessage)}`;
       const response = await fetch(API_URL, {
-        method: 'POST',
+        method: 'PUT',
         headers: {
           'accept': 'application/json',
         },
@@ -31,7 +33,25 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, updateMessage }) =>
       });
 
       if (response.ok) {
-        // updateMessage(index, editedMessage);
+        console.log("edited12", typeof setChatMessages, setChatMessages)
+
+        console.log("messages before edit", messages)
+
+        // loop over messages and find the message which has index === chat_id
+        // then update the message with the new message
+        const editedMessages = messages.map((message: Message, i: number) => {
+          if (i === index) {
+            return {
+              ...message,
+              message: editedMessage,
+            };
+          }
+          return message;
+        });
+
+        console.log("messages after edit", messages)
+
+        setChatMessages(editedMessages);
         setEditIndex(null);
         setEditedMessage('');
       } else {
@@ -76,7 +96,9 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, updateMessage }) =>
                 )}
               </div>
               {message.is_chat_owner && editIndex !== index && (
-                <button onClick={() => handleEditClick(index, message.message)}>edit</button>
+                <button onClick={() => handleEditClick(index, message.message)}>
+                  <i className="fas fa-ellipsis"></i>
+                </button>
               )}
             </div>
           ))}

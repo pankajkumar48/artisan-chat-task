@@ -8,6 +8,13 @@ import ChatHeader from "./ChatHeader/ChatHeader";
 const Chat = () => {
   /** State to control new messages */
   const [chatMessages, setChatMessages] = useState<Message[]>([]);
+  const [refresh, setRefresh] = useState<boolean>(false);
+
+  // Wrapper function for setChatMessages
+  const setChatMessagesWrapper = (newMessages: Message[]) => {
+    setChatMessages(newMessages);
+    setRefresh(!refresh);
+  };
 
   // Add a hook on load to fetch messages and set the state
   useEffect(() => {
@@ -24,7 +31,7 @@ const Chat = () => {
     };
 
     fetchMessages();
-  }, []);
+  }, [refresh]);
 
   const sendANewMessage = (message: Message) => {
     console.log("This message to send", message)
@@ -57,7 +64,7 @@ const Chat = () => {
     <div className="h-screen flex items-center justify-center">
       <div className="max-w-sm w-full bg-white border border-gray-200 rounded-lg shadow relative">
         <ChatHeader name={"me"} />
-        <ChatContent messages={chatMessages} />
+        <ChatContent messages={chatMessages} setChatMessages={setChatMessagesWrapper} />
         <ChatInputBox sendANewMessage={sendANewMessage} />
       </div>
     </div>
