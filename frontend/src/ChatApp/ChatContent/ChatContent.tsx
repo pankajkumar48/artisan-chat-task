@@ -37,8 +37,6 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setChatMessages }) 
 
         console.log("messages before edit", messages)
 
-        // loop over messages and find the message which has index === chat_id
-        // then update the message with the new message
         const editedMessages = messages.map((message: Message, i: number) => {
           if (i === index) {
             return {
@@ -74,7 +72,7 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setChatMessages }) 
               }`}
             >
               <div className={`${message.is_chat_owner ? 'order-2' : 'order-1'}`}>
-                <Avatar />
+                <Avatar size={5} is_chat_owner={message.is_chat_owner} />
               </div>
               <div
                 className={`px-2 w-fit py-3 flex flex-col bg-purple-500 rounded-lg text-white ${
@@ -97,7 +95,7 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setChatMessages }) 
               </div>
               {message.is_chat_owner && editIndex !== index && (
                 <button onClick={() => handleEditClick(index, message.message)}>
-                  <i className="fas fa-ellipsis"></i>
+                  <i className="fas fa-ellipsis pr-2"></i>
                 </button>
               )}
             </div>
