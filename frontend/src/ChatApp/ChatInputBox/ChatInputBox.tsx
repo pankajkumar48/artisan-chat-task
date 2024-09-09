@@ -17,7 +17,8 @@ const ChatInputBox = ({ sendANewMessage }: ChatInputBoxProps) => {
       const newMessagePayload: Message = {
         user: "me",
         is_chat_owner: true,
-        message: newMessage
+        message: newMessage,
+        
       };
       sendANewMessage(newMessagePayload);
       setNewMessage("");

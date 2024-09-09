@@ -1,9 +1,6 @@
-import React from "react";
-import {} from "../../hooks/messages-transform.types";
-import Avatar from "../Avatar/Avatar";
-import { Message } from "../../hooks/useGetMessages";
-
-import { useState } from 'react';
+import React, { useState } from 'react';
+import Avatar from '../Avatar/Avatar';
+import { Message } from '../../hooks/useGetMessages';
 
 interface ChatContentProps {
   messages: Message[];
@@ -11,8 +8,6 @@ interface ChatContentProps {
 }
 
 const ChatContent: React.FC<ChatContentProps> = ({ messages, setChatMessages }) => {
-  console.log("edited1", typeof setChatMessages, setChatMessages)
-
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const [editedMessage, setEditedMessage] = useState<string>('');
 
@@ -23,7 +18,7 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setChatMessages }) 
 
   const handleSaveClick = async (index: number) => {
     try {
-      const API_URL = `http://localhost:8000/chat/${encodeURIComponent(index+1)}?chat_message=${encodeURIComponent(editedMessage)}`;
+      const API_URL = `http://localhost:8000/chat/${encodeURIComponent(index + 1)}?chat_message=${encodeURIComponent(editedMessage)}`;
       const response = await fetch(API_URL, {
         method: 'PUT',
         headers: {
@@ -33,27 +28,36 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setChatMessages }) 
       });
 
       if (response.ok) {
-        console.log("edited12", typeof setChatMessages, setChatMessages)
-
-        console.log("messages before edit", messages)
-
-        const editedMessages = messages.map((message: Message, i: number) => {
-          if (i === index) {
-            return {
-              ...message,
-              message: editedMessage,
-            };
-          }
-          return message;
+        setChatMessages((prevMessages) => {
+          const updatedMessages = [...prevMessages];
+          updatedMessages[index] = { ...updatedMessages[index], message: editedMessage };
+          return updatedMessages;
         });
-
-        console.log("messages after edit", messages)
-
-        setChatMessages(editedMessages);
         setEditIndex(null);
         setEditedMessage('');
       } else {
         console.error('Failed to update message');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  const handleDeleteClick = async (index: number) => {
+    try {
+      const API_URL = `http://localhost:8000/chat/${encodeURIComponent(index + 1)}`;
+      const response = await fetch(API_URL, {
+        method: 'DELETE',
+        headers: {
+          'accept': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        setChatMessages((prevMessages) => prevMessages.filter((_, i) => i !== index));
+        console.log('Message deleted successfully');
+      } else {
+        console.error('Failed to delete message');
       }
     } catch (error) {
       console.error('Error:', error);
@@ -81,22 +85,29 @@ const ChatContent: React.FC<ChatContentProps> = ({ messages, setChatMessages }) 
               >
                 {editIndex === index ? (
                   <div>
-                  <input
-                    type="text"
-                    value={editedMessage}
-                    onChange={(e) => setEditedMessage(e.target.value)}
-                    className="bg-purple-500 text-white"
-                  />
-                  <button onClick={() => handleSaveClick(index)}>Save</button>
-                </div>
+                    <input
+                      type="text"
+                      value={editedMessage}
+                      onChange={(e) => setEditedMessage(e.target.value)}
+                      className="bg-purple-500 text-white"
+                    />
+                    <button onClick={() => handleSaveClick(index)}>Save</button>
+                  </div>
                 ) : (
-                  <span className="text-md">{message.message}</span>
+                  <span className={`text-md ${message.deleted ? 'text-sm italic' : ''}`}>
+                    {message.deleted ? 'deleted' : message.message}
+                  </span>
                 )}
               </div>
               {message.is_chat_owner && editIndex !== index && (
-                <button onClick={() => handleEditClick(index, message.message)}>
-                  <i className="fas fa-ellipsis pr-2"></i>
-                </button>
+                <div className="flex items-center">
+                  <button onClick={() => handleEditClick(index, message.message)}>
+                    <i className="fas fa-edit pr-2"></i>
+                  </button>
+                  <button onClick={() => handleDeleteClick(index)}>
+                    <i className="fas fa-trash-alt pr-2"></i>
+                  </button>
+                </div>
               )}
             </div>
           ))}
